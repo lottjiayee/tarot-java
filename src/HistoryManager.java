@@ -8,16 +8,20 @@ public class HistoryManager {
     private static final DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public void saveReading(String type, List<TarotCard> cards) {
+    public void saveReading(String type, String question, List<TarotCard> cards) {
         try {
             File file = new File(HISTORY_FILE);
             file.getParentFile().mkdirs();
             BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
             writer.write("=== " + LocalDateTime.now().format(FORMATTER) + " | " + type + " ===");
             writer.newLine();
+            if (question != null && !question.isEmpty()) {
+                writer.write("Question: " + question);
+                writer.newLine();
+            }
             for (TarotCard card : cards) {
                 String orientation = card.isReversed() ? "Reversed" : "Upright";
-                writer.write(card.getName() + " [" + orientation + "] - " + card.getCurrentKeyword());
+                writer.write("  " + card.getName() + " [" + orientation + "] - " + card.getCurrentKeyword());
                 writer.newLine();
             }
             writer.newLine();
@@ -37,12 +41,13 @@ public class HistoryManager {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                System.out.println("  " + line);
             }
             reader.close();
         } catch (IOException e) {
             System.out.println("Warning: Could not read history - " + e.getMessage());
         }
+        System.out.println();
     }
 
     public void clearHistory() {

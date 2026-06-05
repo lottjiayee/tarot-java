@@ -6,6 +6,12 @@ public class TarotApp {
     private static HistoryManager history = new HistoryManager();
     private static Scanner scanner = new Scanner(System.in);
 
+    // Shorthand color refs
+    private static final String R  = TarotCard.RESET;
+    private static final String B  = TarotCard.BOLD;
+    private static final String C  = TarotCard.CYAN;
+    private static final String Y  = TarotCard.YELLOW;
+
     public static void main(String[] args) {
         try {
             deck = new TarotDeck(DATA_FILE);
@@ -25,13 +31,14 @@ public class TarotApp {
                 case "1" -> drawDailyCard();
                 case "2" -> drawThreeCards();
                 case "3" -> drawCelticCross();
-                case "4" -> history.showHistory();
-                case "5" -> clearHistory();
+                case "4" -> browseMeanings();
+                case "5" -> history.showHistory();
+                case "6" -> clearHistory();
                 case "0" -> {
                     System.out.println("  May the stars guide your journey. Farewell.");
                     running = false;
                 }
-                default -> System.out.println("  Please enter a number between 0 and 5.");
+                default -> System.out.println("  Please enter a number between 0 and 6.");
             }
         }
         scanner.close();
@@ -39,74 +46,116 @@ public class TarotApp {
 
     static void printBanner() {
         System.out.println();
-        System.out.println("  +====================================+");
-        System.out.println("  |     *  Tarot Card Reading  *       |");
-        System.out.println("  |   Listen to what the universe says |");
-        System.out.println("  +====================================+");
+        System.out.println(C + "  +====================================+" + R);
+        System.out.println(C + "  |" + R + B + "     *  Tarot Card Reading  *      " + R + C + " |" + R);
+        System.out.println(C + "  |" + R + "   Listen to what the universe says" + C + " |" + R);
+        System.out.println(C + "  +====================================+" + R);
         System.out.println();
     }
 
     static void printMenu() {
-        System.out.println("  +-------------------------------+");
-        System.out.println("  |  1. Daily Card                |");
-        System.out.println("  |  2. Three-Card Spread         |");
-        System.out.println("  |     (Past / Present / Future) |");
-        System.out.println("  |  3. Celtic Cross (10 cards)   |");
-        System.out.println("  |  4. View Reading History      |");
-        System.out.println("  |  5. Clear History             |");
-        System.out.println("  |  0. Exit                      |");
-        System.out.println("  +-------------------------------+");
+        System.out.println(C + "  +--------------------------------+" + R);
+        System.out.println(C + "  |" + R + "  1. Daily Card                  " + C + "|" + R);
+        System.out.println(C + "  |" + R + "  2. Three-Card Spread           " + C + "|" + R);
+        System.out.println(C + "  |" + R + "     (Past / Present / Future)   " + C + "|" + R);
+        System.out.println(C + "  |" + R + "  3. Celtic Cross (10 cards)     " + C + "|" + R);
+        System.out.println(C + "  |" + R + "  4. Browse Card Meanings        " + C + "|" + R);
+        System.out.println(C + "  |" + R + "  5. View Reading History        " + C + "|" + R);
+        System.out.println(C + "  |" + R + "  6. Clear History               " + C + "|" + R);
+        System.out.println(C + "  |" + R + "  0. Exit                        " + C + "|" + R);
+        System.out.println(C + "  +--------------------------------+" + R);
         System.out.print("  Your choice: ");
     }
 
+    static String askQuestion(String spreadName) {
+        System.out.print(Y + "  What is your question for the " + spreadName + "? " + R);
+        System.out.print("(Press Enter to skip) ");
+        String question = scanner.nextLine().trim();
+        System.out.println();
+        return question;
+    }
+
     static void drawDailyCard() {
-        System.out.println("  -- Daily Card ---------------------------");
+        System.out.println(B + "  -- Daily Card ---------------------------" + R);
+        String question = askQuestion("Daily Card");
         System.out.println("  Take a deep breath and hold your question in mind...");
         pause();
         TarotCard card = deck.drawOne();
         System.out.println();
-        System.out.println("  " + card);
+        System.out.println("  " + card.toString().replace("\n", "\n  "));
         System.out.println();
-        history.saveReading("Daily Card", List.of(card));
+        if (!question.isEmpty()) {
+            System.out.println(Y + "  Your question: " + R + question);
+            System.out.println();
+        }
+        history.saveReading("Daily Card", question, List.of(card));
         System.out.println("  Saved to history.");
         System.out.println();
     }
 
     static void drawThreeCards() {
-        System.out.println("  -- Three-Card Spread ---------------------");
+        System.out.println(B + "  -- Three-Card Spread ---------------------" + R);
+        String question = askQuestion("Three-Card Spread");
         System.out.println("  Focus on your question and feel the cards...");
         pause();
         List<TarotCard> cards = deck.drawMany(3);
         String[] positions = {"Past", "Present", "Future"};
         System.out.println();
+        if (!question.isEmpty()) {
+            System.out.println(Y + "  Question: " + R + question);
+            System.out.println();
+        }
         for (int i = 0; i < 3; i++) {
-            System.out.println("  [" + positions[i] + "]");
+            System.out.println(B + "  [" + positions[i] + "]" + R);
             System.out.println("  " + cards.get(i).toString().replace("\n", "\n  "));
             System.out.println();
         }
-        history.saveReading("Three-Card Spread", cards);
+        history.saveReading("Three-Card Spread", question, cards);
         System.out.println("  Saved to history.");
         System.out.println();
     }
 
     static void drawCelticCross() {
-        System.out.println("  -- Celtic Cross --------------------------");
+        System.out.println(B + "  -- Celtic Cross --------------------------" + R);
+        String question = askQuestion("Celtic Cross");
         System.out.println("  This is the most complete spread. Clear your mind...");
         pause();
         List<TarotCard> cards = deck.drawMany(10);
         String[] positions = {
             "Present Situation", "Challenge / Obstacle", "Subconscious Root", "Recent Past",
-            "Possible Future", "Near Future", "Your Inner State", "External Influences",
-            "Hopes and Fears", "Final Outcome"
+            "Possible Future",   "Near Future",          "Your Inner State",  "External Influences",
+            "Hopes and Fears",   "Final Outcome"
         };
         System.out.println();
+        if (!question.isEmpty()) {
+            System.out.println(Y + "  Question: " + R + question);
+            System.out.println();
+        }
         for (int i = 0; i < 10; i++) {
-            System.out.printf("  [%2d] %s%n", i + 1, positions[i]);
+            System.out.printf(B + "  [%2d] %s" + R + "%n", i + 1, positions[i]);
             System.out.println("  " + cards.get(i).toString().replace("\n", "\n  "));
             System.out.println();
         }
-        history.saveReading("Celtic Cross", cards);
+        history.saveReading("Celtic Cross", question, cards);
         System.out.println("  Saved to history.");
+        System.out.println();
+    }
+
+    static void browseMeanings() {
+        System.out.println(B + "  -- Card Meanings (" + deck.size() + " cards) ---------------" + R);
+        System.out.println();
+        List<TarotCard> allCards = deck.getAllCards();
+        for (int i = 0; i < allCards.size(); i++) {
+            System.out.printf(Y + "  (%d/%d)" + R + "%n", i + 1, allCards.size());
+            System.out.println("  " + allCards.get(i).toDetailString().replace("\n", "\n  "));
+            System.out.println();
+            if ((i + 1) % 3 == 0 && i + 1 < allCards.size()) {
+                System.out.print("  Press Enter to continue...");
+                scanner.nextLine();
+                System.out.println();
+            }
+        }
+        System.out.println("  End of card list.");
         System.out.println();
     }
 
@@ -122,8 +171,6 @@ public class TarotApp {
     }
 
     static void pause() {
-        try {
-            Thread.sleep(800);
-        } catch (InterruptedException ignored) {}
+        try { Thread.sleep(800); } catch (InterruptedException ignored) {}
     }
 }

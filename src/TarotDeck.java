@@ -27,6 +27,11 @@ public class TarotDeck {
         return cards.size();
     }
 
+    // Return a copy of all cards for browsing
+    public List<TarotCard> getAllCards() {
+        return Collections.unmodifiableList(cards);
+    }
+
     // Draw one card with random orientation
     public TarotCard drawOne() {
         TarotCard card = cards.get(random.nextInt(cards.size()));
