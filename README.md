@@ -12,10 +12,6 @@ A command-line Tarot card reading system built with Java. Draw cards, receive co
 - **Color-Coded Output** — Upright cards in green, reversed cards in red
 - **History** — All readings saved to a local file, viewable and clearable anytime
 
-## Preview
-
-![Demo](screenshot.png)
-
 ## Project Structure
 
 ```
