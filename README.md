@@ -1,3 +1,4 @@
+<img width="843" height="483" alt="Screenshot 2026-06-05 at 10 57 40 PM" src="https://github.com/user-attachments/assets/0143de43-f5c0-4a02-b8e6-921cc74654c3" />
 # tarot-java
 
 A command-line Tarot card reading system built with Java. Draw cards, receive color-coded readings, save your history — all from the terminal.
@@ -11,6 +12,10 @@ A command-line Tarot card reading system built with Java. Draw cards, receive co
 - **Question Input** — Enter your question before each reading; saved alongside your results
 - **Color-Coded Output** — Upright cards in green, reversed cards in red
 - **History** — All readings saved to a local file, viewable and clearable anytime
+
+## Preview
+
+![Demo](screenshot.png)
 
 ## Project Structure
 
