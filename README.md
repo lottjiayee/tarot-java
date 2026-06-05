@@ -1,6 +1,6 @@
 # tarot-java
 
-A command-line Tarot card reading system built with Java. Draw cards, receive color-coded readings, save your history — all from the terminal.
+A command-line Tarot card reading system built with Java. Draw cards, receive color-coded readings, save your history — all from the terminal. Features shuffle animations and randomized opening messages on every launch.
 
 ## Features
 
