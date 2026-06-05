@@ -12,6 +12,19 @@ public class TarotApp {
     private static final String C  = TarotCard.CYAN;
     private static final String Y  = TarotCard.YELLOW;
 
+    private static final String[] OPENING_MESSAGES = {
+        "The cards have been waiting for you...",
+        "Close your eyes. The universe is listening.",
+        "Every card drawn is a mirror of your soul.",
+        "The answers you seek are already within you.",
+        "Trust the cards. Trust yourself.",
+        "The veil between worlds grows thin tonight.",
+        "Fate is not fixed — the cards show possibilities.",
+        "Breathe. The cosmos has something to tell you.",
+        "What is hidden shall be revealed.",
+        "The stars have aligned. Are you ready?"
+    };
+
     public static void main(String[] args) {
         try {
             deck = new TarotDeck(DATA_FILE);
@@ -22,6 +35,7 @@ public class TarotApp {
         }
 
         printBanner();
+        printOpeningMessage();
         boolean running = true;
         while (running) {
             printMenu();
@@ -42,6 +56,14 @@ public class TarotApp {
             }
         }
         scanner.close();
+    }
+
+    static void printOpeningMessage() {
+        Random rand = new Random();
+        String msg = OPENING_MESSAGES[rand.nextInt(OPENING_MESSAGES.length)];
+        System.out.println("  " + TarotCard.BOLD + msg + R);
+        System.out.println();
+        pause();
     }
 
     static void printBanner() {
@@ -79,7 +101,7 @@ public class TarotApp {
         System.out.println(B + "  -- Daily Card ---------------------------" + R);
         String question = askQuestion("Daily Card");
         System.out.println("  Take a deep breath and hold your question in mind...");
-        pause();
+        shuffleAnimation();
         TarotCard card = deck.drawOne();
         System.out.println();
         System.out.println("  " + card.toString().replace("\n", "\n  "));
@@ -97,7 +119,7 @@ public class TarotApp {
         System.out.println(B + "  -- Three-Card Spread ---------------------" + R);
         String question = askQuestion("Three-Card Spread");
         System.out.println("  Focus on your question and feel the cards...");
-        pause();
+        shuffleAnimation();
         List<TarotCard> cards = deck.drawMany(3);
         String[] positions = {"Past", "Present", "Future"};
         System.out.println();
@@ -119,7 +141,7 @@ public class TarotApp {
         System.out.println(B + "  -- Celtic Cross --------------------------" + R);
         String question = askQuestion("Celtic Cross");
         System.out.println("  This is the most complete spread. Clear your mind...");
-        pause();
+        shuffleAnimation();
         List<TarotCard> cards = deck.drawMany(10);
         String[] positions = {
             "Present Situation", "Challenge / Obstacle", "Subconscious Root", "Recent Past",
@@ -168,6 +190,18 @@ public class TarotApp {
             System.out.println("  Cancelled.");
         }
         System.out.println();
+    }
+
+    static void shuffleAnimation() {
+        String[] frames = { "Shuffling .  ", "Shuffling .. ", "Shuffling ..." };
+        try {
+            for (int i = 0; i < 6; i++) {
+                System.out.print("\r  " + C + frames[i % 3] + R);
+                Thread.sleep(350);
+            }
+            System.out.print("\r  Drawing your card...   \n");
+            Thread.sleep(400);
+        } catch (InterruptedException ignored) {}
     }
 
     static void pause() {
